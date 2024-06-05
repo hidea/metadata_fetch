@@ -15,6 +15,15 @@ class JsonLdParser with BaseMetadataParser {
     _jsonData = _parseToJson(document);
   }
 
+  String preprocess(String jsonld) {
+    jsonld =
+        jsonld.replaceAll(RegExp(r'/\*.*\*/'), ''); // Remove /* */ comments
+    jsonld = jsonld
+        .replaceAll('//<![CDATA[', '')
+        .replaceAll('//]]>', ''); // Remove //<![CDATA[ and //]]>
+    return jsonld.trim();
+  }
+
   dynamic _parseToJson(Document? document) {
     final data = document?.head
         ?.querySelector("script[type='application/ld+json']")
@@ -22,7 +31,7 @@ class JsonLdParser with BaseMetadataParser {
     if (data == null) {
       return null;
     }
-    var d = jsonDecode(data);
+    var d = jsonDecode(preprocess(data));
     return d;
   }
 
