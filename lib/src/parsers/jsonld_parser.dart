@@ -31,8 +31,13 @@ class JsonLdParser with BaseMetadataParser {
     if (data == null) {
       return null;
     }
-    var d = jsonDecode(preprocess(data));
-    return d;
+
+    try {
+      var d = jsonDecode(preprocess(data));
+      return d;
+    } catch (e) {
+      return null;
+    }
   }
 
   /// Get the [Metadata.title] from the [<title>] tag
